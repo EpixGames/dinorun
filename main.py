@@ -15,6 +15,10 @@ except ImportError:
 
 pg.init()
 
+font = pg.font.Font('font.ttf', 16)
+text = font.render("Help, aliens", True, (0,0,0))
+text2 = font.render("were attacking!", True, (0,0,0))
+
 idle = True
 frame = 1
 xVelocity = 0
@@ -25,6 +29,10 @@ count = 0
 jumpforce = 10
 gravity = 1
 isjump = False
+
+blit = False
+spoke = False
+wait = 0
 
 
 randomx = random.randrange(50, 750)
@@ -81,6 +89,10 @@ def Draw():
     LoadPlayer()
     LoadGround()
     TotalRefresh()
+    s.display.blit(s.girldino.frame1, (s.girldino.x,s.girldino.y))
+    if blit == True:
+        s.display.blit(text,(470, 300))
+        s.display.blit(text2,(470, 332))
 
 def WalkR():
     global y, x
@@ -104,6 +116,20 @@ def autosave():
     text_list = ["x = "+str(x)+"\n", "y = "+str(y)+"\n"]
     save.writelines(text_list)
     save.close()
+def Jump():
+    global isjump, jumpforce, gravity, y, x
+    if isjump :
+        if jumpforce > 0:
+            y -= int(jumpforce)
+            jumpforce -= 0.5
+        if jumpforce == 0:
+            y += int(gravity)
+            gravity += 0.5
+            if y >= 370:
+                y = 370
+                gravity = 1
+                jumpforce = 10
+                isjump = False
 
 
 while True:
@@ -124,8 +150,20 @@ while True:
     if Moving == "l":
         x -= int(round(xVelocity))
     
-    keys = pg.key.get_pressed()
+    hitbox = pg.Rect(x, y, 69, 81)
+    if hitbox.colliderect(s.girldino.hitbox):
+        if spoke == False:
+            blit = True
+            spoke = True
 
+    wait += 1
+    if wait == 500:
+        blit = False
+        spoke = False
+        wait = 0
+    
+    keys = pg.key.get_pressed()
+    
     if keys[pg.K_d] or keys[pg.K_RIGHT]:
         idle = False
         xVelocity += 0.5
@@ -150,20 +188,7 @@ while True:
         if keys[pg.K_SPACE] or keys[pg.K_UP]:
             jumpcount += 1
             isjump = True
-
-    if isjump :
-        if jumpforce > 0:
-            y -= int(jumpforce)
-            jumpforce -= 0.5
-        if jumpforce == 0:
-            y += int(gravity)
-            gravity += 0.5
-            if y >= 370:
-                y = 370
-                gravity = 1
-                jumpforce = 10
-                isjump = False
-        
+    Jump()   
 
     EdgeLoop()
     Draw()

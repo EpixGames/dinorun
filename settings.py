@@ -6,12 +6,11 @@ FPS = pg.time.Clock()
 
 display = pg.display.set_mode((800, 500)) #Make a window that is 800 by 500 px
 display.fill((255,255,255))
-pg.display.set_caption("The Amazing Dino") #Set the caption of the window
-
+pg.display.set_caption("Dino Run") #Set the caption of the window
 class player(): #Make the player class
     x = 400
     y = 370 #Set the x and y varibles
-
+    
     width = 69
     height = 81 #The width and height of the player/character
 
@@ -37,3 +36,12 @@ class background():
     cloud2 = pg.image.load("tiles/BackCloud.png") #load a image of a lighter cloud
     ground = pg.image.load("tiles/ground.png")
 background = background()
+
+class girldino():
+    frame1 = pg.image.load("Tiles/Girl-dino.png")
+    width = 69
+    height = 81
+    x = 600
+    y = 370
+    hitbox = pg.Rect(600, 370, 69, 81)
+girldino = girldino()
